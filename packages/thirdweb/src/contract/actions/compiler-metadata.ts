@@ -28,20 +28,22 @@ export type CompilerMetadata = {
  * @internal
  */
 // biome-ignore lint/suspicious/noExplicitAny: TODO: fix later
-export function formatCompilerMetadata(metadata: any, compilerType?: "solc" | "zksolc"): CompilerMetadata {
-  let zk_version;
-  if(compilerType === "zksolc") {
-    metadata = metadata.source_metadata;
-    zk_version = metadata.zk_version;
+export function formatCompilerMetadata(
+  metadata: any,
+  compilerType?: "solc" | "zksolc",
+): CompilerMetadata {
+  let meta = metadata;
+  if (compilerType === "zksolc") {
+    meta = metadata.source_metadata;
   }
-  const compilationTarget = metadata.settings.compilationTarget;
+  const compilationTarget = meta.settings.compilationTarget;
   const targets = Object.keys(compilationTarget);
   const name = compilationTarget[targets[0] as keyof typeof compilationTarget];
   const info = {
-    title: metadata.output.devdoc.title,
-    author: metadata.output.devdoc.author,
-    details: metadata.output.devdoc.detail,
-    notice: metadata.output.userdoc.notice,
+    title: meta.output.devdoc.title,
+    author: meta.output.devdoc.author,
+    details: meta.output.devdoc.detail,
+    notice: meta.output.userdoc.notice,
   };
   const licenses: string[] = [
     ...new Set(
@@ -51,11 +53,11 @@ export function formatCompilerMetadata(metadata: any, compilerType?: "solc" | "z
   ];
   return {
     name,
-    abi: metadata?.output?.abi || [],
+    abi: meta?.output?.abi || [],
     metadata,
     info,
     licenses,
-    isPartialAbi: metadata.isPartialAbi,
-    zk_version
+    isPartialAbi: meta.isPartialAbi,
+    zk_version: metadata.zk_version,
   };
 }

@@ -23,7 +23,7 @@ export async function fetchPublishedContractMetadata(options: {
   contractId: string;
   publisher?: string;
   version?: string;
-  compilerType?: "solc" | "zksolc"
+  compilerType?: "solc" | "zksolc";
 }): Promise<FetchDeployMetadataResult> {
   const cacheKey = `${options.contractId}-${options.publisher}-${options.version}`;
   return withCache(
@@ -213,7 +213,7 @@ type FetchPublishedContractOptions = {
   contractId: string;
   version?: string;
   client: ThirdwebClient;
-  compilerType?: "solc" | "zksolc"
+  compilerType?: "solc" | "zksolc";
 };
 
 /**

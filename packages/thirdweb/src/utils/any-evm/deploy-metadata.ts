@@ -1,9 +1,6 @@
 import type { Abi } from "abitype";
 import type { ThirdwebClient } from "../../client/client.js";
-import {
-  formatCompilerMetadata,
-  formatZksolcMetadata,
-} from "../../contract/actions/compiler-metadata.js";
+import { formatCompilerMetadata } from "../../contract/actions/compiler-metadata.js";
 import { download } from "../../storage/download.js";
 import type { Hex } from "../encoding/hex.js";
 import type { Prettify } from "../type-utils.js";
@@ -31,17 +28,17 @@ export async function fetchDeployMetadata(
     uri: options.uri,
     client: options.client,
   }).then((r) => r.json());
-  
-  if(isZksolc && rawMeta.compilers?.zksolc.length === 0) {
+
+  if (isZksolc && rawMeta.compilers?.zksolc.length === 0) {
     throw new Error("Invalid compiler type");
   }
-  
+
   const metadataUri = isZksolc
-      ? rawMeta.compilers.zksolc[0].metadataUri
-      : rawMeta.metadataUri;
+    ? rawMeta.compilers.zksolc[0].metadataUri
+    : rawMeta.metadataUri;
   const bytecodeUri = isZksolc
-      ? rawMeta.compilers.zksolc[0].bytecodeUri
-      : rawMeta.bytecodeUri;
+    ? rawMeta.compilers.zksolc[0].bytecodeUri
+    : rawMeta.bytecodeUri;
   const [deployBytecode, parsedMeta] = await Promise.all([
     download({ uri: bytecodeUri, client: options.client }).then(
       (res) => res.text() as Promise<Hex>,
@@ -49,7 +46,7 @@ export async function fetchDeployMetadata(
     fetchAndParseCompilerMetadata({
       client: options.client,
       uri: metadataUri,
-      compilerType: options.compilerType
+      compilerType: options.compilerType,
     }),
   ]);
 
