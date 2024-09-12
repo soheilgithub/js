@@ -105,18 +105,11 @@ export class ZKHardhatBuilder extends BaseBuilder {
             info.evm.deployedBytecode?.object || bytecode;
           const { metadata, abi } = info;
 
-          const meta = metadata.solc_metadata
-            ? JSON.parse(metadata.solc_metadata)
-            : JSON.parse(metadata);
-
-          // Find and add zk_version to solc_metadata settings - needed for verification
-          // TODO: it's a workaround. remove it (e.g. when ipfs hash issue is resolved)
           const zkVersion = metadata.zk_version;
-          meta.settings["zkVersion"] = zkVersion;
 
-          const evmVersion = meta.settings?.evmVersion || "";
+          const evmVersion = metadata.settings?.evmVersion || "";
           const compilerVersion = zkVersion || "";
-          const sources = Object.keys(meta.sources)
+          const sources = Object.keys(metadata.source_metadata.sources)
             .map((path) => {
               const directPath = join(options.projectPath, path);
               if (existsSync(directPath)) {
@@ -139,7 +132,7 @@ export class ZKHardhatBuilder extends BaseBuilder {
             .filter((path) => path !== undefined) as string[];
 
           const fileNames = Object.keys(
-            meta?.settings?.compilationTarget || {},
+            metadata?.source_metadata?.settings?.compilationTarget || {},
           );
           const fileName = fileNames.length > 0 ? fileNames[0] : "";
 
@@ -152,7 +145,7 @@ export class ZKHardhatBuilder extends BaseBuilder {
             )
           ) {
             contracts.push({
-              metadata: JSON.stringify(meta),
+              metadata: JSON.stringify(metadata),
               bytecode,
               name: contractName,
               fileName,

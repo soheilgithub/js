@@ -1,6 +1,9 @@
 import type { Abi } from "abitype";
 import type { ThirdwebClient } from "../../client/client.js";
-import { formatCompilerMetadata } from "../../contract/actions/compiler-metadata.js";
+import {
+  formatCompilerMetadata,
+  formatZksolcMetadata,
+} from "../../contract/actions/compiler-metadata.js";
 import { download } from "../../storage/download.js";
 import type { Hex } from "../encoding/hex.js";
 import type { Prettify } from "../type-utils.js";
@@ -64,12 +67,17 @@ async function fetchAndParseCompilerMetadata(
       requestTimeoutMs: CONTRACT_METADATA_TIMEOUT_SEC,
     })
   ).json();
-  if (!metadata || !metadata.output) {
+  if (
+    (!metadata || !metadata.output) &&
+    (!metadata.source_metadata || !metadata.source_metadata.output)
+  ) {
     throw new Error(
       `Could not resolve metadata for contract at ${options.uri}`,
     );
   }
-  return formatCompilerMetadata(metadata);
+  return metadata.source_metadata
+    ? formatZksolcMetadata(metadata.source_metadata)
+    : formatCompilerMetadata(metadata);
 }
 
 // types
@@ -96,6 +104,7 @@ type ParsedCompilerMetadata = {
   };
   licenses: string[];
   isPartialAbi?: boolean;
+  zk_version?: string;
 };
 
 export type CompilerMetadata = Prettify<
