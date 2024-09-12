@@ -28,7 +28,12 @@ export type CompilerMetadata = {
  * @internal
  */
 // biome-ignore lint/suspicious/noExplicitAny: TODO: fix later
-export function formatCompilerMetadata(metadata: any): CompilerMetadata {
+export function formatCompilerMetadata(metadata: any, compilerType?: "solc" | "zksolc"): CompilerMetadata {
+  let zk_version;
+  if(compilerType === "zksolc") {
+    metadata = metadata.source_metadata;
+    zk_version = metadata.zk_version;
+  }
   const compilationTarget = metadata.settings.compilationTarget;
   const targets = Object.keys(compilationTarget);
   const name = compilationTarget[targets[0] as keyof typeof compilationTarget];
@@ -51,33 +56,6 @@ export function formatCompilerMetadata(metadata: any): CompilerMetadata {
     info,
     licenses,
     isPartialAbi: metadata.isPartialAbi,
-  };
-}
-
-/**
- * Formats the compiler metadata into a standardized format.
- * @param metadata - The compiler metadata to be formatted.
- * @returns The formatted metadata.
- * @internal
- */
-// biome-ignore lint/suspicious/noExplicitAny: TODO: fix later
-export function formatZksolcMetadata(metadata: any): CompilerMetadata {
-  const compilationTarget = metadata.settings.compilationTarget;
-  const targets = Object.keys(compilationTarget);
-  const name = compilationTarget[targets[0] as keyof typeof compilationTarget];
-  const info = {};
-  const licenses: string[] = [
-    ...new Set(
-      // biome-ignore lint/suspicious/noExplicitAny: TODO: fix later
-      Object.entries(metadata.sources).map(([, src]) => (src as any).license),
-    ),
-  ];
-  return {
-    name,
-    abi: metadata?.output?.abi || [],
-    metadata,
-    info,
-    licenses,
-    isPartialAbi: metadata.isPartialAbi,
+    zk_version
   };
 }

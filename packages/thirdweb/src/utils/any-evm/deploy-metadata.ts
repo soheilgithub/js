@@ -11,6 +11,7 @@ import type { Prettify } from "../type-utils.js";
 export type FetchDeployMetadataOptions = {
   uri: string;
   client: ThirdwebClient;
+  compilerType?: "solc" | "zksolc";
 };
 
 export type FetchDeployMetadataResult = Partial<ExtendedMetadata> &
@@ -25,17 +26,20 @@ export type FetchDeployMetadataResult = Partial<ExtendedMetadata> &
 export async function fetchDeployMetadata(
   options: FetchDeployMetadataOptions,
 ): Promise<FetchDeployMetadataResult> {
+  const isZksolc = options.compilerType === "zksolc";
   const rawMeta: RawCompilerMetadata = await download({
     uri: options.uri,
     client: options.client,
   }).then((r) => r.json());
-  // TODO: proper handling of different compiler metadata types
-  const metadataUri =
-    rawMeta.compilers?.zksolc?.length > 0 && rawMeta.name.endsWith("_ZkSync")
+  
+  if(isZksolc && rawMeta.compilers?.zksolc.length === 0) {
+    throw new Error("Invalid compiler type");
+  }
+  
+  const metadataUri = isZksolc
       ? rawMeta.compilers.zksolc[0].metadataUri
       : rawMeta.metadataUri;
-  const bytecodeUri =
-    rawMeta.compilers?.zksolc?.length > 0 && rawMeta.name.endsWith("_ZkSync")
+  const bytecodeUri = isZksolc
       ? rawMeta.compilers.zksolc[0].bytecodeUri
       : rawMeta.bytecodeUri;
   const [deployBytecode, parsedMeta] = await Promise.all([
@@ -45,6 +49,7 @@ export async function fetchDeployMetadata(
     fetchAndParseCompilerMetadata({
       client: options.client,
       uri: metadataUri,
+      compilerType: options.compilerType
     }),
   ]);
 
@@ -75,9 +80,7 @@ async function fetchAndParseCompilerMetadata(
       `Could not resolve metadata for contract at ${options.uri}`,
     );
   }
-  return metadata.source_metadata
-    ? formatZksolcMetadata(metadata.source_metadata)
-    : formatCompilerMetadata(metadata);
+  return formatCompilerMetadata(metadata, options.compilerType);
 }
 
 // types
