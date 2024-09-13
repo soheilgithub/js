@@ -1,5 +1,32 @@
 # thirdweb
 
+## 5.55.0
+
+### Minor Changes
+
+- [#4571](https://github.com/thirdweb-dev/js/pull/4571) [`5058fdb`](https://github.com/thirdweb-dev/js/commit/5058fdb4707c18a3b22895f90b3682a3c91db52f) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Adds X authentication
+
+- [#4565](https://github.com/thirdweb-dev/js/pull/4565) [`c0778cb`](https://github.com/thirdweb-dev/js/commit/c0778cb9305476025b07bb39b8159f749d15359a) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Adds parseAvatarRecord and parseNftUri utilities
+
+  ```ts
+  import { parseAvatarRecord } from "thirdweb/extensions/ens";
+  import { parseNftUri } from "thirdweb/extensions/common";
+
+  const avatarUrl = await parseAvatarRecord({
+    client,
+    uri: "...",
+  });
+
+  const nftUri = await parseNftUri({
+    client,
+    uri: "...",
+  });
+  ```
+
+### Patch Changes
+
+- [#4546](https://github.com/thirdweb-dev/js/pull/4546) [`3901805`](https://github.com/thirdweb-dev/js/commit/390180592a6d71591c43bcbe3c94da2eeaa5b0d6) Thanks [@edwardysun](https://github.com/edwardysun)! - Add preferredProvider to buyWithFiat
+
 ## 5.54.0
 
 ### Minor Changes
