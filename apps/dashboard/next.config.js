@@ -128,6 +128,11 @@ const moduleExports = {
         source: "/thirdweb.eth/:path*",
         destination: "/deployer.thirdweb.eth/:path*",
       },
+      // we'll add framer rewrites here
+      {
+        source: "/framer-test",
+        destination: "https://landing.thirdweb.com/",
+      },
     ];
   },
   images: {
