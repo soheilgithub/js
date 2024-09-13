@@ -2,6 +2,7 @@ import { isNativeTokenAddress } from "../../../../constants/addresses.js";
 import type { BaseTransactionOptions } from "../../../../transaction/types.js";
 import { isNewWinningBid } from "../../__generated__/IEnglishAuctions/read/isNewWinningBid.js";
 import { bidInAuction as generatedBidInAuction } from "../../__generated__/IEnglishAuctions/write/bidInAuction.js";
+import * as BidInAuction from "../../__generated__/IEnglishAuctions/write/bidInAuction.js";
 import { getAuction } from "../read/getAuction.js";
 import { getWinningBid } from "../read/getWinningBid.js";
 
@@ -105,4 +106,20 @@ export function bidInAuction(
       };
     },
   });
+}
+
+/**
+ * Checks if the `bidInAuction` method is supported by the given contract.
+ * @param availableSelectors An array of 4byte function selectors of the contract. You can get this in various ways, such as using "whatsabi" or if you have the ABI of the contract available you can use it to generate the selectors.
+ * @returns A boolean indicating if the `bidInAuction` method is supported.
+ * @extension MARKETPLACE
+ * @example
+ * ```ts
+ * import { isBidInAuctionSupported } from "thirdweb/extensions/marketplace";
+ *
+ * const supported = isBidInAuctionSupported(["0x..."]);
+ * ```
+ */
+export function isBidInAuctionSupported(availableSelectors: string[]) {
+  return BidInAuction.isBidInAuctionSupported(availableSelectors);
 }

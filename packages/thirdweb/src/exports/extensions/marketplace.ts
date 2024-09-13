@@ -31,20 +31,13 @@ export {
   type CurrencyPriceForListingParams,
 } from "../../extensions/marketplace/direct-listings/read/currencyPriceForListing.js";
 
-// isDirectListingSupported
-export { isCreateListingSupported } from "../../extensions/marketplace/__generated__/IDirectListings/write/createListing.js";
 export { isCancelListingSupported } from "../../extensions/marketplace/__generated__/IDirectListings/write/cancelListing.js";
-export { isBuyFromListingSupported } from "../../extensions/marketplace/__generated__/IDirectListings/write/buyFromListing.js";
-
-// isEnglishAuctionSupported
-export { isCreateAuctionSupported } from "../../extensions/marketplace/__generated__/IEnglishAuctions/write/createAuction.js";
-export { isBidInAuctionSupported } from "../../extensions/marketplace/__generated__/IEnglishAuctions/write/bidInAuction.js";
-export { isCancelAuctionSupported } from "../../extensions/marketplace/__generated__/IEnglishAuctions/write/cancelAuction.js";
 
 // WRITE
 export {
   createListing,
   type CreateListingParams,
+  isCreateListingSupported,
 } from "../../extensions/marketplace/direct-listings/write/createListing.js";
 export {
   updateListing,
@@ -57,6 +50,7 @@ export {
 export {
   buyFromListing,
   type BuyFromListingParams,
+  isBuyFromListingSupported,
 } from "../../extensions/marketplace/direct-listings/write/buyFromListing.js";
 export {
   approveBuyerForListing,
@@ -126,14 +120,17 @@ export {
 export {
   createAuction,
   type CreateAuctionParams,
+  isCreateAuctionSupported,
 } from "../../extensions/marketplace/english-auctions/write/createAuction.js";
 export {
   bidInAuction,
   type BidInAuctionParams,
+  isBidInAuctionSupported,
 } from "../../extensions/marketplace/english-auctions/write/bidInAuction.js";
 export {
   cancelAuction,
   type CancelAuctionParams,
+  isCancelAuctionSupported,
 } from "../../extensions/marketplace/__generated__/IEnglishAuctions/write/cancelAuction.js";
 export {
   buyoutAuction,
